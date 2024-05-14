@@ -14,11 +14,30 @@ datasource db {
 }
 
 model User {
-  id                 Int    @id @default(autoincrement())
+  id                 Int             @id @default(autoincrement())
   backgroundImageUrl String
   profilePictureUrl  String
-  name               String @db.VarChar(100)
-  title              String @db.VarChar(100)
+  name               String          @db.VarChar(100)
+  title              String          @db.VarChar(100)
   followers          Int
   following          Int
+  companies          Company[]       @relation("UserToCompanies")
+  userCompanies      UserCompanies[] @relation("UserToUserCompanies")
+}
+
+model Company {
+  id            Int             @id @default(autoincrement())
+  name          String
+  users         User[]          @relation("UserToCompanies")
+  userCompanies UserCompanies[] @relation("CompanyToUserCompanies")
+}
+
+// Relation table for many-to-many relationship between User and Company
+model UserCompanies {
+  user      User    @relation(fields: [userId], references: [id], name: "UserToUserCompanies")
+  userId    Int 
+  company   Company @relation(fields: [companyId], references: [id], name: "CompanyToUserCompanies")
+  companyId Int
+
+  @@id([userId, companyId])
 }

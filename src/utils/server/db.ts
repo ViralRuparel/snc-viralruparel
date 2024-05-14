@@ -1,6 +1,16 @@
-import { Person } from "@/utils/common/person";
-import { mockUsers } from "@/utils/server/mock-users";
+import { PrismaClient } from "@prisma/client";
+import { Person, User } from "@/utils/common/person";
 
-export const getPersonFromDB = async (person: Person) => {
-  return mockUsers[person];
-};
+const prisma = new PrismaClient();
+
+export async function getPersonFromDB(personName: Person): Promise<User> {
+  try {
+    const person = await prisma.user.findFirst({
+      where: { name: personName },
+    });
+    return person as User;
+  } catch (error) {
+    console.error("Error fetching person from DB:", error);
+    throw error;
+  }
+}
