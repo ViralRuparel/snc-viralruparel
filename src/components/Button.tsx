@@ -1,16 +1,20 @@
-import { FunctionComponent, PropsWithChildren } from "react";
-import classNames from "classnames";
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  ReactNode,
+  ButtonHTMLAttributes,
+} from "react";
 
-type ButtonProps = {};
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  children: ReactNode;
+};
 
 export const Button: FunctionComponent<PropsWithChildren<ButtonProps>> = ({
   children,
+  ...props
 }) => {
   return (
-    <button
-      type="button"
-      className={classNames("px-2 py-1 border border-black")}
-    >
+    <button type="button" {...props}>
       {children}
     </button>
   );

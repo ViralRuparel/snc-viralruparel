@@ -1,17 +1,21 @@
 import { PrismaClient } from "@prisma/client";
-import { mockUsers } from "@/utils/server/mock-users";
-import { Person, User } from "@/utils/common/person";
+import { mockUsers } from "../src/utils/server/mock-users";
+import { Person, User } from "../src/utils/common/person";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // TODO: Add mock users
-  // await prisma.user.create({
-  //   data: mockUsers[Person.PersonA] as unknown as User,
-  // });
-  // await prisma.user.create({
-  //   data: mockUsers[Person.PersonB] as unknown as User,
-  // });
+  console.log(`Start seeding ...`);
+  for (const person in mockUsers) {
+    const userData: User | null = mockUsers[person as Person];
+    if (userData) {
+      const createdUser = await prisma.user.create({
+        data: userData,
+      });
+      console.log(`Created user with id: ${createdUser.id}`);
+    }
+  }
+  console.log(`Seeding finished.`);
 }
 
 main()
